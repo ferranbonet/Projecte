@@ -21,6 +21,7 @@ public class Projecte {
         String nom = null, genere = null, descripcio = null;
         int numCapitols = 0, duracioCapitols = 0, anyEmissio = 0;
         double nota = 0.0;
+        boolean acabat = false, omplert = false;
         
         Scanner ent = new Scanner(System.in);
         int opcio;
