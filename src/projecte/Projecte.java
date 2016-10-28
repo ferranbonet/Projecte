@@ -19,12 +19,12 @@ public class Projecte {
     public static void main(String[] args) {
         // TODO code application logic here
         String nom = null, genere = null, descripcio = null;
-        int numCapitols = 0, duracioCapitols = 0, anyEmissio = 0;
+        int numCapitols = 0, duracioCapitols = 0, anyEmissio = 0, opcio;
         double nota = 0.0;
         boolean acabat = false, omplert = false;
+        char sino = 0, sino2;
 
         Scanner ent = new Scanner(System.in);
-        int opcio;
 
         do {
             //Menú
@@ -56,15 +56,85 @@ public class Projecte {
                         anyEmissio = ent.nextInt();
                         System.out.println("Assigna-li una nota:");
                         nota = ent.nextDouble();
-                        System.out.println("L'has acabat?");
-                        acabat = ent.nextBoolean();
+                        System.out.println("L'has acabat? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino){
+                                case 'S': case 's':
+                                    acabat = (sino == 'S');
+                                    break;
+                                case 'N': case 'n':
+                                    acabat = (sino == 'N');
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("L'has acabat? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino!='S' && sino != 's'&& sino!='N'&&sino!='n');
                         omplert = true;
                     } else {
                         System.out.println("Ja hi han dades introduïdes, si en vols introduïr de noves tens que esborrar les antigues.");
                     }
                     break;
                 case 2:
-
+                    if (omplert) {
+                        System.out.println("Vols veure les dades abans d'esborrar-les? (S/N)");
+                        sino2 = ent.next().charAt(0);
+                        do {
+                            switch (sino2) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Nom: " + nom);
+                                    System.out.println("Gènere: " + genere);
+                                    System.out.println("Descripció: " + descripcio);
+                                    System.out.println("Número de capítols: " + numCapitols);
+                                    System.out.println("Duració dels capítols: " + duracioCapitols);
+                                    System.out.println("Any d'emissió: " + anyEmissio);
+                                    System.out.println("Nota: " + nota);
+                                    System.out.println("Acabat: " + sino);
+                                    sino2 = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino2 + " no és una opció vàlida.\n");
+                                    System.out.println("Vols veure les dades abans d'esborrar-les? (S/N)");
+                                    sino2 = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino2 != 'N' && sino2 != 'n');
+                        System.out.println("\nEstàs segur que vols esborrar les dades? (S/N)");
+                        sino2 = ent.next().charAt(0);
+                        do {
+                        switch (sino2) {
+                            case 'S':
+                            case 's':
+                                numCapitols = 0;
+                                duracioCapitols = 0;
+                                anyEmissio = 0;
+                                nota = 0.0;
+                                acabat = false;
+                                omplert = false;
+                                System.out.println("Dades esborrades.\n");
+                                sino2 = 'N';
+                                break;
+                            case 'N':
+                            case 'n':
+                                System.out.println("Operació cancel·lada.\n");
+                                break;
+                            default:
+                                System.out.println(sino2 + " no és una opció vàlida.\n");
+                                System.out.println("Estàs segur que vols esborrar les dades? (S/N)");
+                                sino2 = ent.next().charAt(0);
+                                break;
+                        }
+                        } while (sino2 != 'N' && sino2 != 'n');
+                    } else {
+                        System.out.println("No hi han dades introduïdes.");
+                    }
                     break;
                 case 3:
 
