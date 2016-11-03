@@ -95,7 +95,11 @@ public class Projecte {
                                     System.out.println("Duració dels capítols: " + duracioCapitols);
                                     System.out.println("Any d'emissió: " + anyEmissio);
                                     System.out.println("Nota: " + nota);
-                                    System.out.println("Acabat: " + acabatChar);
+                                    if (acabat == true) {
+                                        System.out.println("Acabat: Sí");
+                                    } else {
+                                        System.out.println("Acabat: No");
+                                    }
                                     sino = 'N';
                                     break;
                                 case 'N':
@@ -115,6 +119,7 @@ public class Projecte {
                                 case 'S':
                                 case 's':
                                     omplert = false;
+                                    sino = 'N';
                                     break;
                                 case 'N':
                                 case 'n':
