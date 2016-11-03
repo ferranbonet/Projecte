@@ -77,7 +77,7 @@ public class Projecte {
                         } while (acabatChar != 'S' && acabatChar != 's' && acabatChar != 'N' && acabatChar != 'n');
                         omplert = true;
                     } else {
-                        System.out.println("Ja hi han dades introduïdes, si en vols introduïr de noves tens que esborrar les antigues.");
+                        System.out.println("Ja hi han dades enregistrades, si en vols introduïr de noves tens que esborrar les antigues.");
                     }
                     break;
                 case 2:
@@ -133,11 +133,224 @@ public class Projecte {
                             }
                         } while (sino != 'N' && sino != 'n');
                     } else {
-                        System.out.println("No hi han dades introduïdes.");
+                        System.out.println("No hi han dades enregistrades.");
                     }
                     break;
                 case 3:
-
+                    if (omplert == true) {
+                        System.out.println("Vols veure les dades abans de modificar-les? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Nom: " + nom);
+                                    System.out.println("Gènere: " + genere);
+                                    System.out.println("Descripció: " + descripcio);
+                                    System.out.println("Número de capítols: " + numCapitols);
+                                    System.out.println("Duració dels capítols: " + duracioCapitols);
+                                    System.out.println("Any d'emissió: " + anyEmissio);
+                                    System.out.println("Nota: " + nota);
+                                    if (acabat == true) {
+                                        System.out.println("Acabat: Sí");
+                                    } else {
+                                        System.out.println("Acabat: No");
+                                    }
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols veure les dades abans de modificar-les? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("\nVols modificar el nom? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Introdueix el nom:");
+                                    nom = ent.next();
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols modificar el nom? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("\nVols modificar el gènere? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Introdueix el gènere:");
+                                    genere = ent.next();
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols modificar el gènere? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("\nVols modificar la descripció? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Introdueix una petita descripció:");
+                                    descripcio = ent.next();
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols modificar la descripció? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("Vols modificar el número de capítols vists? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Introdueix el número de capítols vists:");
+                                    numCapitols = ent.nextInt();
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols modificar el número de capítols vists? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("Vols modificar la duració dels capítols? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Introdueix la duració dels capítols:");
+                                    duracioCapitols = ent.nextInt();
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols modificar la duració dels capítols? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("Vols modificar l'any d'emissió? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Introdueix l'any d'emissió");
+                                    anyEmissio = ent.nextInt();
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols modificar l'any d'emissió? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("Vols modificar l'any d'emissió? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Introdueix l'any d'emissió");
+                                    anyEmissio = ent.nextInt();
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols modificar l'any d'emissió? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("Vols modificar la nota? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Assigna-li una nota:");
+                                    nota = ent.nextDouble();
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols modificar la nota? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("L'has acabat? (S/N)");
+                        acabatChar = ent.next().charAt(0);
+                        do {
+                            switch (acabatChar) {
+                                case 'S':
+                                case 's':
+                                    acabat = true;
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    acabat = false;
+                                    break;
+                                default:
+                                    System.out.println(acabatChar + " no és una opció vàlida.\n");
+                                    System.out.println("L'has acabat? (S/N)");
+                                    acabatChar = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (acabatChar != 'S' && acabatChar != 's' && acabatChar != 'N' && acabatChar != 'n');
+                        omplert = true;
+                    } else {
+                        System.out.println("No hi han dades enregistrades.");
+                    }
                     break;
                 case 4:
                     if (omplert == true) {
