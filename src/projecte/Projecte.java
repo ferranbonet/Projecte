@@ -35,6 +35,7 @@ public class Projecte {
             System.out.println("| 2. Borrar          |");
             System.out.println("| 3. Modificar       |");
             System.out.println("| 4. Llistar         |");
+            System.out.println("| 5. Recuperar       |");
             System.out.println("|____________________|\n");
             opcio = ent.nextInt();
             switch (opcio) {
@@ -371,8 +372,64 @@ public class Projecte {
                         System.out.println("No hi ha dades per a mostrar.\n");
                     }
                     break;
+                case 5:
+                    if (!omplert) {
+                        System.out.println("Vols veure les dades abans de recuperar-les? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    System.out.println("Nom: " + nom);
+                                    System.out.println("Gènere: " + genere);
+                                    System.out.println("Descripció: " + descripcio);
+                                    System.out.println("Número de capítols: " + numCapitols);
+                                    System.out.println("Duració dels capítols: " + duracioCapitols);
+                                    System.out.println("Any d'emissió: " + anyEmissio);
+                                    System.out.println("Nota: " + nota);
+                                    if (acabat == true) {
+                                        System.out.println("Acabat: Sí");
+                                    } else {
+                                        System.out.println("Acabat: No");
+                                    }
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Vols veure les dades abans de recuperar-les? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                        System.out.println("\nEstàs segur que vols recuperar les dades? (S/N)");
+                        sino = ent.next().charAt(0);
+                        do {
+                            switch (sino) {
+                                case 'S':
+                                case 's':
+                                    omplert = true;
+                                    sino = 'N';
+                                    break;
+                                case 'N':
+                                case 'n':
+                                    System.out.println("Operació cancel·lada.\n");
+                                    break;
+                                default:
+                                    System.out.println(sino + " no és una opció vàlida.\n");
+                                    System.out.println("Estàs segur que vols recuperar les dades? (S/N)");
+                                    sino = ent.next().charAt(0);
+                                    break;
+                            }
+                        } while (sino != 'N' && sino != 'n');
+                    } else {
+                        System.out.println("No hi han dades enregistrades.");
+                    }
+                    break;
                 default:
-                    System.out.println(opcio + " no és una opció del menú.\n");
+                    System.out.println(opcio + " no és una opció vàlida.\n");
                     break;
             }
         } while (opcio != 0);
