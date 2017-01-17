@@ -22,7 +22,7 @@ public class Projecte {
         int numCapitols = 0, duracioCapitols = 0, anyEmissio = 0, opcio;
         double nota = 0.0;
         boolean acabat = false, omplert = false;
-        char acabatChar = 0, sino;
+        char acabatChar, sino;
 
         Scanner ent = new Scanner(System.in);
 
