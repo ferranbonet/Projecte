@@ -38,7 +38,7 @@ public class Projecte {
             array[j].setOmplert(false);
         }
     }
-
+    
     public static void demanarOpcio() {
         Scanner ent = new Scanner(System.in);
         // Menú
