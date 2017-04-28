@@ -5,15 +5,14 @@
  */
 package projecte;
 
+import java.io.Serializable;
+
 /**
  *
  * @author fbonet
  */
-public class Serie {
-    //
-    //
-    // Variables projecte
-    //
+public class Serie implements Serializable {
+
     private String nom = "";
     private String genere = "";
     private String descripcio = "";
@@ -24,20 +23,19 @@ public class Serie {
     private boolean acabat = false;
     private boolean omplert = false;
     private char acabatChar;
-    //
 
     @Override
     public String toString() {
-        return "\nNom: " + nom +
-               "\nGènere: " + genere +
-               "\nDescripció: " + descripcio +
-               "\nNúmero de capítols: " + numCapitols +
-               "\nDuració capítols: " + duracioCapitols +
-               "\nAny d'emissió: " + anyEmissio +
-               "\nNota: " + nota +
-               (acabat?"\nAcabat":"\nNo acabat");
+        return "\nNom: " + nom
+                + "\nGènere: " + genere
+                + "\nDescripció: " + descripcio
+                + "\nNúmero de capítols: " + numCapitols
+                + "\nDuració capítols: " + duracioCapitols
+                + "\nAny d'emissió: " + anyEmissio
+                + "\nNota: " + nota
+                + (acabat ? "\nAcabat" : "\nNo acabat");
     }
-    
+
     public String getNom() {
         return nom;
     }
@@ -117,5 +115,4 @@ public class Serie {
     public void setAcabatChar(char acabatChar) {
         this.acabatChar = acabatChar;
     }
-    //
 }

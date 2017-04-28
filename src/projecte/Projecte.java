@@ -5,6 +5,14 @@
  */
 package projecte;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 /**
@@ -13,16 +21,15 @@ import java.util.Scanner;
  */
 public class Projecte {
 
-    // Número màxim de caselles de l'array
-    private static final int MAX_SERIES = 2;
-    // Array on guardarem la informació
+    public static final int MAX_SERIES = 5;
     private static Serie[] array = new Serie[MAX_SERIES];
-    // Variable on es guarda l'opció escollida
     private static int opcio;
+    static File f = new File("series.db");
 
-    /**
-     * @param args the command line arguments
-     */
+    public static Serie[] getArray() {
+        return array;
+    }
+
     public static void main(String[] args) {
         inicialitzarVariables();
         do {
@@ -31,32 +38,75 @@ public class Projecte {
         } while (!opcioFinal());
     }
 
-    public static void inicialitzarVariables() {
-        // Inicialització de l'array
-        for (int j = 0; j < array.length; j++) {
-            array[j] = new Serie();
-            array[j].setOmplert(false);
+    public static int inicialitzarVariables() {
+        Serie p = null;
+        int i = 0;
+        if (f.exists()) {
+            boolean acabar = false;
+            ObjectInputStream lectura = null;
+            try {
+                lectura = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)));
+                while (true) {
+                    array[i] = (Serie) lectura.readObject();
+                    i++;
+                }
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                System.err.println("Atenció, no caben tots els objectes. Si continues pots perdre dades. Vols continuar?(S/N):");
+                Scanner ent = new Scanner(System.in);
+                char siNo = ' ';
+                do {
+                    siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
+                } while (siNo != 'S' && siNo != 'N');
+                if (siNo == 'N') {
+                    acabar = true;
+                }
+            } catch (IOException ex) {
+            } catch (ClassNotFoundException ex) {
+            } finally {
+                try {
+                    if (lectura != null) {
+                        lectura.close();
+                    }
+                } catch (IOException ex) {
+                }
+                if (acabar) {
+                    System.exit(0);
+                }
+            }
         }
+        int resultat = i;
+        for (; i < array.length; i++) {
+            array[i] = new Serie();
+            array[i].setOmplert(false);
+        }
+        return resultat;
     }
-    
+
     public static void demanarOpcio() {
         Scanner ent = new Scanner(System.in);
-        // Menú
-        System.out.println(" ____________________");
-        System.out.println("|        Menú        |");
-        System.out.println("| 0. Sortir          |");
-        System.out.println("| 1. Afegir          |");
-        System.out.println("| 2. Borrar          |");
-        System.out.println("| 3. Modificar       |");
-        System.out.println("| 4. Llistar         |");
-        System.out.println("| 5. Recuperar       |");
-        System.out.println("|____________________|\n");
-        opcio = ent.skip("[\r\n]*").nextInt();
+        do {
+            System.out.println(" ____________________");
+            System.out.println("|        Menú        |");
+            System.out.println("| 0. Sortir          |");
+            System.out.println("| 1. Afegir          |");
+            System.out.println("| 2. Borrar          |");
+            System.out.println("| 3. Modificar       |");
+            System.out.println("| 4. Llistar         |");
+            System.out.println("| 5. Recuperar       |");
+            System.out.println("|____________________|\n");
+            try {
+                opcio = Integer.valueOf(ent.skip("[\r\n]*").nextLine());
+            } catch (java.lang.NumberFormatException e) {
+                opcio = -1;
+                System.out.println("Opció incorrecta.");
+            }
+        } while (opcio > 5 || opcio < 0);
     }
 
     public static void tractarOpcio() {
         switch (opcio) {
             case 0:
+                finalitzar();
                 break;
             case 1:
                 introduirSerie();
@@ -73,8 +123,6 @@ public class Projecte {
             case 5:
                 recuperarSerie();
                 break;
-            default:
-                System.out.println("\nOpció incorrecta.");
         }
     }
 
@@ -82,12 +130,32 @@ public class Projecte {
         return opcio == 0;
     }
 
+    public static void finalitzar() {
+        ObjectOutputStream escriptura = null;
+        try {
+            escriptura = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)));
+
+            for (int i = 0; i < array.length; i++) {
+                if (array[i].isOmplert()) {
+                    escriptura.writeObject(array[i]);
+                }
+            }
+        } catch (IOException ex) {
+            System.err.println("Error en desar les dades.");
+        } finally {
+            try {
+                if (escriptura != null) {
+                    escriptura.close();
+                }
+            } catch (IOException ex) {
+            }
+        }
+    }
+
     public static void introduirSerie() {
         Scanner ent = new Scanner(System.in);
-        // Buscar una casella buida a l'array
         int i;
         for (i = 0; i < array.length && array[i].isOmplert(); i++);
-        // Si troba una casella buida l'omplirem
         if (i != array.length) {
             System.out.println("Introdueix el nom:");
             array[i].setNom(ent.skip("[\r\n]*").nextLine());
@@ -95,14 +163,42 @@ public class Projecte {
             array[i].setGenere(ent.skip("[\r\n]*").nextLine());
             System.out.println("Introdueix una petita descripció:");
             array[i].setDescripcio(ent.skip("[\r\n]*").nextLine());
-            System.out.println("Introdueix el número de capítols vists:");
-            array[i].setNumCapitols(ent.skip("[\r\n]*").nextInt());
-            System.out.println("Introdueix la duració dels capítols:");
-            array[i].setDuracioCapitols(ent.skip("[\r\n]*").nextInt());
-            System.out.println("Introdueix l'any d'emissió:");
-            array[i].setAnyEmissio(ent.skip("[\r\n]*").nextInt());
-            System.out.println("Assigna-li una nota:");
-            array[i].setNota(ent.skip("[\r\n]*").nextInt());
+            do {
+                System.out.println("Introdueix el número de capítols vists:");
+                try {
+                    array[i].setNumCapitols(Integer.valueOf(ent.skip("[\r\n]*").nextLine()));
+                } catch (java.lang.NumberFormatException e) {
+                    System.out.println("Opció incorrecta.");
+                    array[i].setNumCapitols(-1);
+                }
+            } while (array[i].getNumCapitols() < 0);
+            do {
+                System.out.println("Introdueix la duració dels capítols (minuts):");
+                try {
+                    array[i].setDuracioCapitols(Integer.valueOf(ent.skip("[\r\n]*").nextLine()));
+                } catch (java.lang.NumberFormatException e) {
+                    System.out.println("Opció incorrecta.");
+                    array[i].setDuracioCapitols(-1);
+                }
+            } while (array[i].getDuracioCapitols() < 0);
+            do {
+                System.out.println("Introdueix l'any d'emissió:");
+                try {
+                    array[i].setAnyEmissio(Integer.valueOf(ent.skip("[\r\n]*").nextLine()));
+                } catch (java.lang.NumberFormatException e) {
+                    System.out.println("Opció incorrecta.");
+                    array[i].setAnyEmissio(-1);
+                }
+            } while (array[i].getAnyEmissio() < 0);
+            do {
+                System.out.println("Assigna-li una nota:");
+                try {
+                    array[i].setNota(Double.valueOf(ent.skip("[\r\n]*").nextLine()));
+                } catch (java.lang.NumberFormatException e) {
+                    System.out.println("Opció incorrecta.");
+                    array[i].setNota(-1);
+                }
+            } while (array[i].getNota() < 0);
             do {
                 System.out.println("L'has acabat? (S/N)");
                 array[i].setAcabatChar(ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0));
@@ -116,10 +212,8 @@ public class Projecte {
 
     public static void esborrarSerie() {
         Scanner ent = new Scanner(System.in);
-        // Variables locals
         boolean existeix = false;
         char siNo = 'N';
-        // Buscar caselles plenes a l'array
         int i;
         for (i = 0; i < array.length && siNo != 'F'; i++) {
             if (array[i].isOmplert()) {
@@ -148,18 +242,16 @@ public class Projecte {
 
     public static void modificarSerie() {
         Scanner ent = new Scanner(System.in);
-        // Variables locals
         boolean existeix = false;
         char siNo = 'N';
         int compt = 1;
-        // Buscar caselles plenes a l'array
         int i;
         for (i = 0; i < array.length && siNo != 'S' && siNo != 'F'; i++) {
             if (array[i].isOmplert()) {
                 System.out.format("\nSerie " + compt++ + ":\n");
                 System.out.println(array[i]);
                 do {
-                    System.out.println("\\nVols modificar la serie(S/N) o finalitzar la busqueda(F)?");
+                    System.out.println("\nVols modificar la serie(S/N) o finalitzar la busqueda(F)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N' && siNo != 'F');
                 existeix = true;
@@ -170,72 +262,92 @@ public class Projecte {
         }
         if (existeix) {
             if (siNo == 'S') {
-                System.out.println("\n" + array[i].getNom());
                 do {
-                    System.out.println("\nVols modificar el nom(S/N)?");
+                    System.out.println("Vols modificar el nom \"" + array[i].getNom() + "\" (S/N)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N');
                 if (siNo == 'S') {
                     System.out.print("Nou nom: ");
                     array[i].setNom(ent.skip("[\r\n]*").nextLine());
                 }
-                System.out.println("\n" + array[i].getGenere());
                 do {
-                    System.out.println("\nVols modificar el gènere(S/N)?");
+                    System.out.println("\nVols modificar el gènere \"" + array[i].getGenere() + "\" (S/N)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N');
                 if (siNo == 'S') {
                     System.out.print("Nou gènere: ");
                     array[i].setGenere(ent.skip("[\r\n]*").nextLine());
                 }
-                System.out.println("\n" + array[i].getDescripcio());
                 do {
-                    System.out.println("\nVols modificar la descripció(S/N)?");
+                    System.out.println("\nVols modificar la descripció \"" + array[i].getDescripcio() + "\" (S/N)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N');
                 if (siNo == 'S') {
                     System.out.print("Nova descripció: ");
                     array[i].setDescripcio(ent.skip("[\r\n]*").nextLine());
                 }
-                System.out.println("\n" + array[i].getNumCapitols());
                 do {
-                    System.out.println("\nVols modificar el número de capítols vists(S/N)?");
+                    System.out.println("\nVols modificar el número de capítols vists \"" + array[i].getNumCapitols() + "\" (S/N)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N');
                 if (siNo == 'S') {
-                    System.out.print("Nou número de capítols vists: ");
-                    array[i].setNumCapitols(ent.skip("[\r\n]*").nextInt());
+                    do {
+                        System.out.print("Nou número de capítols vists: ");
+                        try {
+                            array[i].setNumCapitols(Integer.valueOf(ent.skip("[\r\n]*").nextLine()));
+                        } catch (java.lang.NumberFormatException e) {
+                            System.out.println("Opció incorrecta.");
+                            array[i].setNumCapitols(-1);
+                        }
+                    } while (array[i].getNumCapitols() < 0);
                 }
-                System.out.println("\n" + array[i].getDuracioCapitols());
                 do {
-                    System.out.println("\nVols modificar la duració dels capítols(S/N)?");
+                    System.out.println("\nVols modificar la duració dels capítols \"" + array[i].getDuracioCapitols() + "\" (S/N)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N');
                 if (siNo == 'S') {
-                    System.out.print("Nova duració dels capítols: ");
-                    array[i].setDuracioCapitols(ent.skip("[\r\n]*").nextInt());
+                    do {
+                        System.out.print("Nova duració dels capítols: ");
+                        try {
+                            array[i].setDuracioCapitols(Integer.valueOf(ent.skip("[\r\n]*").nextLine()));
+                        } catch (java.lang.NumberFormatException e) {
+                            System.out.println("Opció incorrecta.");
+                            array[i].setDuracioCapitols(-1);
+                        }
+                    } while (array[i].getDuracioCapitols() < 0);
                 }
-                System.out.println("\n" + array[i].getAnyEmissio());
                 do {
-                    System.out.println("\nVols modificar l'any d'emissió(S/N)?");
+                    System.out.println("\nVols modificar l'any d'emissió \"" + array[i].getAnyEmissio() + "\" (S/N)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N');
                 if (siNo == 'S') {
-                    System.out.print("Nou any d'emissió: ");
-                    array[i].setAnyEmissio(ent.skip("[\r\n]*").nextInt());
+                    do {
+                        System.out.print("Nou any d'emissió: ");
+                        try {
+                            array[i].setAnyEmissio(Integer.valueOf(ent.skip("[\r\n]*").nextLine()));
+                        } catch (java.lang.NumberFormatException e) {
+                            System.out.println("Opció incorrecta.");
+                            array[i].setAnyEmissio(-1);
+                        }
+                    } while (array[i].getAnyEmissio() < 0);
                 }
-                System.out.println("\n" + array[i].getNota());
                 do {
-                    System.out.println("\nVols modificar la nota(S/N)?");
+                    System.out.println("\nVols modificar la nota \"" + array[i].getNota() + "\" (S/N)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N');
                 if (siNo == 'S') {
-                    System.out.print("Nova nota: ");
-                    array[i].setNota(ent.skip("[\r\n]*").nextInt());
+                    do {
+                        System.out.print("Nova nota: ");
+                        try {
+                            array[i].setNota(Double.valueOf(ent.skip("[\r\n]*").nextLine()));
+                        } catch (java.lang.NumberFormatException e) {
+                            System.out.println("Opció incorrecta.");
+                            array[i].setNota(-1);
+                        }
+                    } while (array[i].getNota() < 0);
                 }
-                System.out.println("\n" + array[i].isAcabat());
                 do {
-                    System.out.println("\nVols modificar si l'has acabat(S/N)?");
+                    System.out.println("\nVols modificar si l'has acabat \"" + array[i].isAcabat() + "\" (S/N)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N');
                 if (siNo == 'S') {
@@ -256,10 +368,8 @@ public class Projecte {
 
     public static void llistarSerie() {
         Scanner ent = new Scanner(System.in);
-        // Variables locals
-        boolean existeix = false;
-        char siNo = 'S';
-        // Buscar caselles plenes a l'array
+        boolean existeix = true;
+        char siNo = 'N';
         int i;
         for (i = 0; i < array.length; i++) {
             if (array[i].isOmplert()) {
@@ -268,7 +378,9 @@ public class Projecte {
                     System.out.println("\nVols llistar més series(S/N)?");
                     siNo = ent.skip("[\r\n]*").nextLine().toUpperCase().charAt(0);
                 } while (siNo != 'S' && siNo != 'N');
-                existeix = true;
+                if (!array[i + 1].isOmplert()) {
+                    existeix = false;
+                }
             }
             if (siNo == 'N') {
                 break;
@@ -281,11 +393,9 @@ public class Projecte {
 
     public static void recuperarSerie() {
         Scanner ent = new Scanner(System.in);
-        // Variables locals
         boolean existeix = false;
         char siNo = 'N';
         int compt = 0;
-        // Buscar caselles plenes a l'array
         int i;
         for (i = 0; i < array.length && siNo != 'S' && siNo != 'F'; i++) {
             if (!array[i].isOmplert()) {
